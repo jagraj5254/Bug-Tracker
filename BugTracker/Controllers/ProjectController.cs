@@ -60,7 +60,8 @@ namespace BugTracker.Controllers
                             {
                                 Name = p.Name,
                                 Id = p.Id,
-                                Created = p.Created
+                                Created = p.Created,
+                                Updated = p.Updated
                             }).ToList();
             return View(model);
         }
@@ -123,6 +124,7 @@ namespace BugTracker.Controllers
 
             var model = new CreateProjectViewModel();
             model.Name = project.Name;
+            model.Updated = project.Updated;
             return View(model);
         }
 
@@ -153,6 +155,7 @@ namespace BugTracker.Controllers
             }
 
             project.Name = model.Name;
+            project.Updated = DateTime.Now;
 
             DbContext.SaveChanges();
 
