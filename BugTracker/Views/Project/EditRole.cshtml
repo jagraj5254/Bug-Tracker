@@ -1,0 +1,35 @@
+﻿@model EditRoleViewModel
+
+@{
+    ViewBag.Title = "ChangeRole";
+}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+
+    <section id="main-content">
+        <section class="wrapper site-min-height">
+            <div class="row mt">
+                <div class="col-lg-12">
+                    <form method="post">
+                        @Html.LabelFor(p => p.Admin)
+                        @Html.CheckBoxFor(p => p.Admin)
+
+                        @Html.LabelFor(p => p.Developer)
+                        @Html.CheckBoxFor(p => p.Developer)
+
+                        @Html.LabelFor(p => p.ProjectManager, "Project Manager")
+                        @Html.CheckBoxFor(p => p.ProjectManager)
+
+                        @Html.LabelFor(p => p.Submitter)
+                        @Html.CheckBoxFor(p => p.Submitter)
+
+                        <input type="submit" />
+                    </form>
+                </div>
+            </div>
+        </section>
+    </section>
+</div>
+<!-- /.content-wrapper -->

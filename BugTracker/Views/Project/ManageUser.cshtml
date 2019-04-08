@@ -1,0 +1,96 @@
+﻿@model List<UserManagerRoleViewModel>
+
+@section css {
+    <link rel="stylesheet"
+          href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+}
+
+@section Scripts {
+    <script type="text/javascript"
+            src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js">
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#manageUsers').DataTable();
+        });
+    </script>
+}
+
+@{
+    ViewBag.Title = "ManageUser";
+}
+
+<div>
+    <h2 style="margin-left: 320px;">Manage Users</h2>
+    <table class="table table-striped" id="manageUsers">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Admin</th>
+                <th>Developer</th>
+                <th>Project Manager</th>
+                <th>Submitter</th>
+                <th></th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var record in Model)
+            {
+                <tr>
+                    <td>@record.DisplayName</td>
+                    <td>@record.UserName</td>
+                    @if (record.Roles.Contains("Admin"))
+                    {
+                    <td>
+                        <i class="fas fa-check"></i>
+                    </td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+
+                    @if (record.Roles.Contains("Developer"))
+                    {
+                        <td>
+                            <i class="fas fa-check"></i>
+                        </td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+
+                    @if (record.Roles.Contains("Project Manager"))
+                    {
+                        <td>
+                            <i class="fas fa-check"></i>
+                        </td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+
+                    @if (record.Roles.Contains("Submitter"))
+                    {
+                        <td>
+                            <i class="fas fa-check"></i>
+                        </td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                    <td>
+                        @Html.ActionLink("EditRole", "EditRole", new { userId = record.Id })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
