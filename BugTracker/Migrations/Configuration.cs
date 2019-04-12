@@ -75,6 +75,23 @@ namespace BugTracker.Migrations
             {
                 userManager.AddToRole(adminUser.Id, "Admin");
             }
+
+            context.TicketTypes.AddOrUpdate(x => x.Id,
+                new Models.Domain.Tickets.TicketType() { Id = 1, Name = "Bug" },
+                new Models.Domain.Tickets.TicketType() { Id = 2, Name = "Feature" },
+                new Models.Domain.Tickets.TicketType() { Id = 3, Name = "Database" },
+                new Models.Domain.Tickets.TicketType() { Id = 4, Name = "Support" });
+
+            context.TicketPriorities.AddOrUpdate(x => x.Id,
+                new Models.Domain.Tickets.TicketPriority() { Id = 1, Name = "Low" },
+                new Models.Domain.Tickets.TicketPriority() { Id = 2, Name = "Medium" },
+                new Models.Domain.Tickets.TicketPriority() { Id = 3, Name = "High" });
+
+            context.TicketStatus.AddOrUpdate(x => x.Id,
+                new Models.Domain.Tickets.TicketStatus() { Id = 1, Name = "Opened" },
+                new Models.Domain.Tickets.TicketStatus() { Id = 2, Name = "Resolved" },
+                new Models.Domain.Tickets.TicketStatus() { Id = 3, Name = "Rejected" });
+            context.SaveChanges();
         }
     }
 }

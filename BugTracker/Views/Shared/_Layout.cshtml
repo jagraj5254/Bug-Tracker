@@ -70,6 +70,14 @@
                 {
                     <li class="nav-item"> <a class="nav-link" href="@Url.Action("ViewProject", "Project")"> My Projects </a></li>
                 }
+
+                @if (User.IsInRole("Admin") ||
+                    User.IsInRole("Project Manager") ||
+                    User.IsInRole("Developer") ||
+                    User.IsInRole("Submitter"))
+                {
+                    <li class="nav-item"> <a class="nav-link" href="@Url.Action("Index", "Ticket")"> All Tickets </a></li>
+                }
             </ul>
         </nav>
         @RenderBody()

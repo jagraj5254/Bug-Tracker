@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using BugTracker.Models.Domain;
+using BugTracker.Models.Domain.Tickets;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -12,11 +14,23 @@ namespace BugTracker.Models
     public class ApplicationUser : IdentityUser
     {
         public virtual List<Project> Projects { get; set; }
+        public virtual List<Ticket> Tickets { get; set; }
+
+        [InverseProperty(nameof(Ticket.CreatedBy))]
+        public virtual List <Ticket> CreatedBy { get; set; }
+
+        [InverseProperty(nameof(Ticket.AssignedTo))]
+        public virtual List<Ticket> AssignedTo { get; set; }
+
         public string DisplayName { get; set; }
 
         public ApplicationUser()
         {
             Projects = new List<Project>();
+            Tickets = new List<Ticket>();
+
+            CreatedBy = new List<Ticket>();
+            AssignedTo = new List<Ticket>();
         }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
@@ -36,6 +50,10 @@ namespace BugTracker.Models
         }
 
         public DbSet<Project> Projects { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<TicketType> TicketTypes { get; set; }
+        public DbSet<TicketStatus> TicketStatus { get; set; }
+        public DbSet<TicketPriority> TicketPriorities { get; set; }
 
         public static ApplicationDbContext Create()
         {
