@@ -62,7 +62,7 @@
                             </div>
 
                             @if (User.IsInRole("Admin") ||
-                               User.IsInRole("Project Manager"))
+                            User.IsInRole("Project Manager"))
                             {
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.TicketStatusName, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -78,6 +78,7 @@
                                     </div>
                                 </div>
                             }
+
 
                             <div class="form-group">
                                 @Html.LabelFor(model => model.ProjectName, htmlAttributes: new { @class = "control-label col-md-2" })

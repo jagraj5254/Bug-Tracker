@@ -40,7 +40,6 @@
                             <th>Tickets</th>
                             <th>Created</th>
                             <th>Updated</th>
-                            <th></th>
                         </tr>
                     </thead>
 
@@ -51,9 +50,7 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Name)
                                 </td>
-                                <td>
-                                    
-                                </td>
+                                <td></td>
                                 <td>0</td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Created)
@@ -61,14 +58,6 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Updated)
                                 </td>
-
-                                @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
-                                {
-                                    <td>
-                                        @Html.ActionLink("EditProjects", "Edit", new { id = item.Id }) |
-                                        @Html.ActionLink("EditMembers", "EditMembers", new { id = item.Id })
-                                    </td>
-                                }
                             </tr>
                         }
                     </tbody>

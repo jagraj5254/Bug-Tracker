@@ -14,7 +14,6 @@ namespace BugTracker.Models.ViewModels
         public string UserName { get; set; }
         public string DisplayName { get; set; }
 
-        public object ViewBag { get; set; }
         public List<string> Roles { get; set; }
 
         public UserManagerRoleViewModel() {

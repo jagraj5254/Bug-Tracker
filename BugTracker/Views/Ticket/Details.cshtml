@@ -1,0 +1,111 @@
+﻿@model ViewTicketViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            <h3>Details</h3>
+            <table class="table" id="ticketList">
+                <tr>
+                    <th>Title</th>
+                    <td>@Model.Title</td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td>@Model.Description</td>
+                </tr>
+                <tr>
+                    <th>DateCreated</th>
+                    <td>@Model.DateCreated</td>
+                </tr>
+                <tr>
+                    <th>DateUpdated</th>
+                    <td>@Model.DateUpdated</td>
+                </tr>
+                <tr>
+                    <th>Priority</th>
+                    <td>@Model.TicketPriorityName</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>@Model.TicketStatusName</td>
+                </tr>
+                <tr>
+                    <th>Type</th>
+                    <td>@Model.TicketTypeName</td>
+                </tr>
+                <tr>
+                    <th>Attachment</th>
+                    @foreach (var attachment in Model.MediaUrl)
+                    {
+                    <td>
+                        <a href=@attachment>Attachment</a>
+                    </td>
+                    }
+                </tr>
+
+            </table>
+        </div>
+        <div class="col-8">
+            <div>
+                <h3>Comments</h3>
+                @foreach (var comments in Model.Comments)
+                {
+                    <table class="table" id="ticketList">
+                        <tr>
+                            <th>Comment:</th>
+                            <td>@comments.CommentBody</td>
+                            <th>Posted:</th>
+                            <td> @comments.DateCreated</td>
+                            <th>By:</th>
+                            <td>@User.Identity.Name</td>
+                        </tr>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        @using (Html.BeginForm("Comment", "Ticket", new { id = Model.Id }, FormMethod.Post))
+        {
+            <div class="form-horizontal">
+                <h4>Comment</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CommentBody, "Comment:")
+                    @Html.TextBoxFor(model => model.CommentBody, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.CommentBody, "", new { @class = "danger" })
+                </div>
+
+                <button type="submit" class="btn btn-default">Create</button>
+            </div>
+        }
+
+    </div>
+
+    <form method="post" enctype='multipart/form-data'>
+        <div class="form-horizontal">
+            <h4>Attachment</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Media, htmlAttributes: new { @class = "control-label col-md-2" })
+                <input name="media" type="file" class="form-control" id="fileUpload" />
+                @Html.ValidationMessageFor(model => model.Media, "", new { @class = "text-danger" })
+            </div>
+
+            <button type="submit" class="btn btn-default">Create</button>
+        </div>
+
+    </form>
+</div>
+
+

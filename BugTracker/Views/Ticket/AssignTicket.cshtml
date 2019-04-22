@@ -1,0 +1,27 @@
+﻿@model List<UserManagerRoleViewModel>
+
+<div>
+    <h2 style="margin-left: 320px;">Assign Tickets</h2>
+    <table class="table table-striped" id="manageUsers">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th></th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var record in Model)
+            {
+                <tr>
+                    <td>@record.DisplayName</td>
+                    <td>
+                        @Html.ActionLink("Assign", "Assign", new { userId = record.Id })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+

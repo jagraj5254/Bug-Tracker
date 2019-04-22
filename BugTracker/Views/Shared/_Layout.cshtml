@@ -68,7 +68,7 @@
                     User.IsInRole("Developer") ||
                     User.IsInRole("Submitter"))
                 {
-                    <li class="nav-item"> <a class="nav-link" href="@Url.Action("ViewProject", "Project")"> My Projects </a></li>
+                    <li class="nav-item"> <a class="nav-link" href="@Url.Action("MyProjects", "Project")"> My Projects </a></li>
                 }
 
                 @if (User.IsInRole("Admin") ||
@@ -77,6 +77,12 @@
                     User.IsInRole("Submitter"))
                 {
                     <li class="nav-item"> <a class="nav-link" href="@Url.Action("Index", "Ticket")"> All Tickets </a></li>
+                }
+
+                @if (User.IsInRole("Developer") ||
+                    User.IsInRole("Submitter"))
+                {
+                    <li class="nav-item"> <a class="nav-link" href="@Url.Action("IndexMyTickets", "Ticket")"> My Tickets </a></li>
                 }
             </ul>
         </nav>

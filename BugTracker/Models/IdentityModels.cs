@@ -15,6 +15,7 @@ namespace BugTracker.Models
     {
         public virtual List<Project> Projects { get; set; }
         public virtual List<Ticket> Tickets { get; set; }
+        public virtual List<Comments> Comments { get; set; }
 
         [InverseProperty(nameof(Ticket.CreatedBy))]
         public virtual List <Ticket> CreatedBy { get; set; }
@@ -28,6 +29,7 @@ namespace BugTracker.Models
         {
             Projects = new List<Project>();
             Tickets = new List<Ticket>();
+            Comments = new List<Comments>();
 
             CreatedBy = new List<Ticket>();
             AssignedTo = new List<Ticket>();
@@ -51,6 +53,7 @@ namespace BugTracker.Models
 
         public DbSet<Project> Projects { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<Comments> Comments { get; set; }
         public DbSet<TicketType> TicketTypes { get; set; }
         public DbSet<TicketStatus> TicketStatus { get; set; }
         public DbSet<TicketPriority> TicketPriorities { get; set; }

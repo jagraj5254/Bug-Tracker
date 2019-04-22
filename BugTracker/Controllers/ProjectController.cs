@@ -66,6 +66,24 @@ namespace BugTracker.Controllers
             return View(model);
         }
 
+        public ActionResult MyProjects()
+        {
+            var userId = User.Identity.GetUserId();
+
+            var model = DbContext
+                .Projects
+                .Where(p => p.Users.Any(t => t.Id == userId))
+                .Select(p => new ViewProjectViewModel
+                {
+                    Name = p.Name,
+                    Id = p.Id,
+                    Created = p.Created,
+                    Updated = p.Updated
+                }).ToList();
+
+            return View(model);
+        }
+
         [HttpGet]
         public ActionResult Create()
         {
@@ -265,6 +283,69 @@ namespace BugTracker.Controllers
 
                 return RedirectToAction(nameof(ProjectController.ManageUser));
             }
+        }
+
+        public ActionResult EditMembers(int? id)
+        {
+            if (!id.HasValue)
+            {           
+                return RedirectToAction(nameof(ProjectController.ViewProject));
+            }
+
+            var project = DbContext.Projects.FirstOrDefault(p => p.Id == id);
+
+            if (project == null)
+            {
+                return RedirectToAction(nameof(ProjectController.ViewProject));
+            }
+
+            var removeUsers = project.Users;
+            var users = DbContext.Users.ToList();
+            var addUsers = new List<ApplicationUser>();
+            foreach(var user in users)
+            {
+                if (!removeUsers.Contains(user))
+                {
+                    addUsers.Add(user);
+                }
+            }
+
+            var model = new EditMembersViewModel()
+            {
+                addUsers = addUsers.ToList(),
+                removeUsers = removeUsers.ToList(),
+                ProjectId = project.Id,
+            };
+
+            return View(model);
+        }
+
+        public ActionResult AddUser(string id, int? projectId)
+        {
+            if (string.IsNullOrWhiteSpace(id) || !projectId.HasValue)
+            {
+                return RedirectToAction(nameof(ProjectController.EditMembers));
+            }
+            var users = DbContext.Users.FirstOrDefault(u => u.Id == id);
+            var project = DbContext.Projects.FirstOrDefault(p => p.Id == projectId);
+            project.Users.Add(users);
+            DbContext.SaveChanges();
+
+            return RedirectToAction(nameof(ProjectController.EditMembers));
+        }
+
+        public ActionResult DeleteUser(string id, int? projectId)
+        {
+            if (string.IsNullOrWhiteSpace(id) || !projectId.HasValue)
+            {
+                return RedirectToAction(nameof(ProjectController.EditMembers));
+            }
+            var users = DbContext.Users.FirstOrDefault(u => u.Id == id);
+            var project = DbContext.Projects.FirstOrDefault(p => p.Id == projectId);
+            project.Users.Remove(users);
+            DbContext.SaveChanges();
+
+            return RedirectToAction(nameof(ProjectController.EditMembers));
         }
     }
 }

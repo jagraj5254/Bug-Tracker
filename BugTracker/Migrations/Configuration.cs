@@ -88,7 +88,7 @@ namespace BugTracker.Migrations
                 new Models.Domain.Tickets.TicketPriority() { Id = 3, Name = "High" });
 
             context.TicketStatus.AddOrUpdate(x => x.Id,
-                new Models.Domain.Tickets.TicketStatus() { Id = 1, Name = "Opened" },
+                new Models.Domain.Tickets.TicketStatus() { Id = 1, Name = "Open" },
                 new Models.Domain.Tickets.TicketStatus() { Id = 2, Name = "Resolved" },
                 new Models.Domain.Tickets.TicketStatus() { Id = 3, Name = "Rejected" });
             context.SaveChanges();

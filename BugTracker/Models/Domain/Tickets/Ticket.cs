@@ -14,23 +14,23 @@ namespace BugTracker.Models.Domain
         public DateTime DateCreated { get; set; }
         public DateTime? DateUpdated { get; set; }
 
-        public string TicketTypeName { get; set; }
         public virtual TicketType TicketType { get; set; }
 
-        public string TicketPriorityName { get; set; }
         public virtual TicketPriority TicketPriority { get; set; }
 
-        public string TicketStatusName { get; set; }
         public virtual TicketStatus TicketStatus { get; set; }
 
-        //public string CreatedById { get; set; }
+        public virtual Project Project { get; set; }
+
         public virtual ApplicationUser CreatedBy { get; set; }
 
-        //public string AssignedToId { get; set; }
         public ApplicationUser AssignedTo { get; set; }
+
+        public List <string> MediaUrl { get; set; }
 
         public Ticket()
         {
+            MediaUrl = new List<string>();
             DateCreated = DateTime.Now;
         }
     }

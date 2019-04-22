@@ -1,0 +1,81 @@
+﻿@model EditMembersViewModel
+
+@{
+    ViewBag.Title = "View";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <section id="main-content">
+                <section class="wrapper site-min-height">
+                    <div class="row mt">
+                        <h2>ProjectUsers</h2>
+                        <div class="col-lg-12">
+
+                            <table class="table" id="projectList">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Remove</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @foreach (var item in Model.removeUsers)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @item.DisplayName
+                                            </td>
+                                            <td>@Html.ActionLink("Remove", "DeleteUser", new { id = item.Id, projectId = Model.ProjectId })</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </section>
+                <!-- /wrapper -->
+            </section>
+        </div>
+        <div class="col-md-6">
+            <section id="main-content">
+                <section class="wrapper site-min-height">
+                    <div class="row mt">
+                        <h2>Users</h2>
+                        <div class="col-lg-12">
+
+                            <table class="table" id="projectList">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Add</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @foreach (var item in Model.addUsers)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @item.DisplayName
+                                            </td>
+                                            <td>@Html.ActionLink("Add", "AddUser", new { id = item.Id, ProjectId = Model.ProjectId })</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </section>
+                <!-- /wrapper -->
+            </section>
+
+        </div>
+    </div>
+</div>
+
+
