@@ -344,6 +344,7 @@ namespace BugTracker.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Admin, Project Manager")]
         public ActionResult Assign(int? id)
         {
             var userId = User.Identity.GetUserId();
