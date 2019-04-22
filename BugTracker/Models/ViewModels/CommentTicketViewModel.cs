@@ -10,7 +10,8 @@ namespace BugTracker.Models.ViewModels
         public virtual ApplicationUser User { get; set; }
 
         public int Id { get; set; }
-        public string Username { get; set; }
+        public string Created { get; set; }
+
         public string CommentBody { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateUpdated { get; set; }

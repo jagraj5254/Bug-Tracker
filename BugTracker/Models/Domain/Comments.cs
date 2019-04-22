@@ -15,8 +15,9 @@ namespace BugTracker.Models.Domain
         public int TicketId { get; set; }
         public virtual Ticket Ticket { get; set; }
 
-        [Required]
         public string CommentBody { get; set; }
+
+        public virtual ApplicationUser Created { get; set; }
 
         public DateTime DateCreated { get; set; }
         public DateTime? DateUpdated { get; set; }

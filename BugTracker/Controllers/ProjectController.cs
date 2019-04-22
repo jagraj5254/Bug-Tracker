@@ -61,7 +61,9 @@ namespace BugTracker.Controllers
                                 Name = p.Name,
                                 Id = p.Id,
                                 Created = p.Created,
-                                Updated = p.Updated
+                                Updated = p.Updated,
+                                Members = p.Users.Count,
+                                Tickets = p.Ticket.Count
                             }).ToList();
             return View(model);
         }
@@ -78,7 +80,9 @@ namespace BugTracker.Controllers
                     Name = p.Name,
                     Id = p.Id,
                     Created = p.Created,
-                    Updated = p.Updated
+                    Updated = p.Updated,
+                    Members = p.Users.Count,
+                    Tickets = p.Ticket.Count
                 }).ToList();
 
             return View(model);

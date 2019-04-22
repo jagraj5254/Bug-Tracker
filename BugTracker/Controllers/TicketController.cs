@@ -25,7 +25,7 @@ namespace BugTracker.Controllers
         {
             string userID = User.Identity.GetUserId();
 
-            if (User.IsInRole("Submitter"))
+            if (User.IsInRole("Submitter") || User.IsInRole("Developer"))
             {
                 var model = DbContext.Tickets
                                 .Where(p => p.Project.Users.Any(m => m.Id == userID))
@@ -40,6 +40,7 @@ namespace BugTracker.Controllers
                                     TicketPriorityName = p.TicketPriority.Name,
                                     TicketStatusName = p.TicketStatus.Name,
                                     ProjectName = p.Project.Name,
+                                    AssignedTo = p.AssignedTo.DisplayName,
                                     CreatedBy = p.CreatedBy.DisplayName
                                 }).ToList();
                 return View(model);
@@ -59,6 +60,7 @@ namespace BugTracker.Controllers
                                     TicketPriorityName = p.TicketPriority.Name,
                                     TicketStatusName = p.TicketStatus.Name,
                                     ProjectName = p.Project.Name,
+                                    AssignedTo = p.AssignedTo.DisplayName,
                                     CreatedBy = p.CreatedBy.DisplayName
                                 }).ToList();
                 return View(model);
@@ -71,27 +73,54 @@ namespace BugTracker.Controllers
         {
             string userID = User.Identity.GetUserId();
 
-            var model = DbContext.Tickets
-                                        .Where(p => p.CreatedBy.Id == userID)
-                                        .Select(p => new ViewTicketViewModel
-                                        {
-                                            Title = p.Title,
-                                            Id = p.Id,
-                                            Description = p.Description,
-                                            DateCreated = p.DateCreated,
-                                            DateUpdated = p.DateUpdated,
-                                            TicketTypeName = p.TicketType.Name,
-                                            TicketPriorityName = p.TicketPriority.Name,
-                                            TicketStatusName = p.TicketStatus.Name,
-                                            ProjectName = p.Project.Name,
-                                            CreatedBy = p.CreatedBy.DisplayName
-                                        }).ToList();
-            return View(model);
+            if (User.IsInRole("Submitter"))
+            {
+                var model = DbContext.Tickets
+                                .Where(p => p.CreatedBy.Id == userID)
+                                .Select(p => new ViewTicketViewModel
+                                {
+                                    Title = p.Title,
+                                    Id = p.Id,
+                                    Description = p.Description,
+                                    DateCreated = p.DateCreated,
+                                    DateUpdated = p.DateUpdated,
+                                    TicketTypeName = p.TicketType.Name,
+                                    TicketPriorityName = p.TicketPriority.Name,
+                                    TicketStatusName = p.TicketStatus.Name,
+                                    ProjectName = p.Project.Name,
+                                    AssignedTo = p.AssignedTo.DisplayName,
+                                    CreatedBy = p.CreatedBy.DisplayName
+                                }).ToList();
+                return View(model);
+            }
+            if (User.IsInRole("Developer"))
+            {
+                var model = DbContext.Tickets
+                                .Where(p => p.AssignedTo.Id == userID)
+                                .Select(p => new ViewTicketViewModel
+                                {
+                                    Title = p.Title,
+                                    Id = p.Id,
+                                    Description = p.Description,
+                                    DateCreated = p.DateCreated,
+                                    DateUpdated = p.DateUpdated,
+                                    TicketTypeName = p.TicketType.Name,
+                                    TicketPriorityName = p.TicketPriority.Name,
+                                    TicketStatusName = p.TicketStatus.Name,
+                                    ProjectName = p.Project.Name,
+                                    AssignedTo = p.AssignedTo.DisplayName,
+                                    CreatedBy = p.CreatedBy.DisplayName
+                                }).ToList();
+                return View(model);
+            }
+            return View();
         }
 
         [HttpGet]
-        public ActionResult Create(CreateTicketViewModel model)
+        public ActionResult Create()
         {
+            var model = new CreateTicketViewModel();
+
             var userId = User.Identity.GetUserId();
 
             var projects = DbContext.Projects
@@ -103,6 +132,7 @@ namespace BugTracker.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Submitter")]
         public ActionResult Create(int? id, CreateTicketViewModel model)
         {
             if (!ModelState.IsValid)
@@ -228,7 +258,7 @@ namespace BugTracker.Controllers
             if (ticket == null)
                 return RedirectToAction(nameof(TicketController.Index));
 
-            var model = new ViewTicketViewModel();           
+            var model = new ViewTicketViewModel();
             model.Title = ticket.Title;
             model.Description = ticket.Description;
             model.DateUpdated = ticket.DateUpdated;
@@ -237,12 +267,17 @@ namespace BugTracker.Controllers
             model.TicketPriorityName = ticket.TicketPriority.Name;
             model.TicketStatusName = ticket.TicketStatus.Name;
             model.TicketTypeName = ticket.TicketType.Name;
-            model.MediaUrl = ticket.MediaUrl;
+            model.Attachments = DbContext.Attachments.Where(p => p.TicketId == ticket.Id).Select(p => new AttachmentTicketViewModel()
+            {
+                FileUrl = p.FileUrl,
+                Id = p.Id
+            }).ToList();
             model.Comments = DbContext.Comments.Where(p => p.TicketId == ticket.Id).Select(p => new CommentTicketViewModel()
             {
                 CommentBody = p.CommentBody,
                 DateCreated = p.DateCreated,
                 DateUpdated = p.DateUpdated,
+                Created = p.Created.DisplayName,
                 Id = p.Id,
             }).ToList();
 
@@ -254,8 +289,10 @@ namespace BugTracker.Controllers
         [HttpPost]
         public ActionResult Details(int? id, ViewTicketViewModel model)
         {
-            var ticket = DbContext.Tickets.FirstOrDefault(p =>
-                        p.Id == id.Value);
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
 
             string fileExtension;
 
@@ -270,6 +307,11 @@ namespace BugTracker.Controllers
                 }
             }
 
+            Attachments attachment;
+            attachment = new Attachments();
+
+            attachment.TicketId = model.Id;
+
             if (model.Media != null)
             {
                 if (!Directory.Exists(Constants.MappedUploadFolder))
@@ -282,9 +324,10 @@ namespace BugTracker.Controllers
 
                 model.Media.SaveAs(fullPathWithName);
 
-                ticket.MediaUrl.Add(Constants.UploadFolder + fileName);
+                attachment.FileUrl = Constants.UploadFolder + fileName;
             }
 
+            DbContext.Attachments.Add(attachment);
             DbContext.SaveChanges();
 
             return RedirectToAction(nameof(TicketController.Details));
@@ -296,14 +339,27 @@ namespace BugTracker.Controllers
 
             var userId = User.Identity.GetUserId();
 
+            var developer = DbContext.Roles.FirstOrDefault(p => p.Name == "Developer");
             var model = DbContext.Users
-                                      .Where(p => p.Roles.Any(m => m.RoleId == "7e5839f2-350c-44b6-9f12-788b00e3dca9"))
+                                      .Where(p => p.Roles.Any(m => m.RoleId == developer.Id))
                                       .Select(p => new UserManagerRoleViewModel
                                       {
                                           DisplayName = p.DisplayName
                                       }).ToList();
 
             return View(model);
+        }
+
+        public ActionResult Assign(int? id)
+        {
+            var userId = User.Identity.GetUserId();
+
+            var user = DbContext.Users.FirstOrDefault(p => p.Id == userId);
+            var ticket = DbContext.Tickets.FirstOrDefault(p => p.Id == id);
+
+            ticket.AssignedTo = user;
+
+            return RedirectToAction(nameof(TicketController.Index));
         }
 
         [HttpGet]
@@ -342,12 +398,17 @@ namespace BugTracker.Controllers
                     return RedirectToAction(nameof(TicketController.Details));
                 }
             }
+
+            var userId = User.Identity.GetUserId();
+
             comment.CommentBody = model.CommentBody;
             comment.TicketId = model.Id;
             comment.DateCreated = DateTime.Now;
+            comment.Created = DbContext.Users.FirstOrDefault(p => p.Id == userId);
+
             DbContext.SaveChanges();
 
-            return RedirectToAction(nameof(TicketController.Details));
+            return RedirectToAction("Details", new { id = comment.TicketId });
         }
     }
 }

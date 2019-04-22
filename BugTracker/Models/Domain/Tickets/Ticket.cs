@@ -26,11 +26,8 @@ namespace BugTracker.Models.Domain
 
         public ApplicationUser AssignedTo { get; set; }
 
-        public List <string> MediaUrl { get; set; }
-
         public Ticket()
         {
-            MediaUrl = new List<string>();
             DateCreated = DateTime.Now;
         }
     }

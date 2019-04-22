@@ -77,22 +77,15 @@
                                     @Html.DisplayFor(modelItem => item.TicketPriorityName)
                                 </td>
                                 <td>
-                                    @User.Identity.Name
+                                    @Html.DisplayFor(modelItem => item.CreatedBy)
                                 </td>
-                                <td></td>
-
-                                @if (User.IsInRole("Submitter") || User.IsInRole("Developers") || User.IsInRole("Admin") || User.IsInRole("Project Manager"))
-                                {
+                                <td></td>                                
                                     <td>
                                         @Html.ActionLink("EditTicket", "Edit", new { id = item.Id })
                                     </td>
                                     <td>
                                         @Html.ActionLink("Details", "Details", new { id = item.Id })
                                     </td>
-                                    <td>
-                                        @Html.ActionLink("Assign", "AssignTicket", new { id = item.Id })
-                                    </td>
-                                }
                             </tr>
                         }
                     </tbody>

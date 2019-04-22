@@ -40,11 +40,9 @@
                 </tr>
                 <tr>
                     <th>Attachment</th>
-                    @foreach (var attachment in Model.MediaUrl)
+                    @foreach (var attachment in Model.Attachments)
                     {
-                    <td>
-                        <a href=@attachment>Attachment</a>
-                    </td>
+                        <td>@attachment.FileUrl</td>
                     }
                 </tr>
 
@@ -62,7 +60,7 @@
                             <th>Posted:</th>
                             <td> @comments.DateCreated</td>
                             <th>By:</th>
-                            <td>@User.Identity.Name</td>
+                            <td>@comments.Created</td>
                         </tr>
                     </table>
                 }
@@ -89,6 +87,26 @@
         }
 
     </div>
+
+    @*<div class="row">
+        @using (Html.BeginForm("Attachment", "Ticket",FormMethod.Post))
+        {
+            <div class="form-horizontal">
+                <h4>Attachment</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Media, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <input name="media" type="file" class="form-control" id="fileUpload" />
+                    @Html.ValidationMessageFor(model => model.Media, "", new { @class = "text-danger" })
+                </div>
+
+                <button type="submit" class="btn btn-default">Create</button>
+            </div>
+        }
+
+    </div>*@
 
     <form method="post" enctype='multipart/form-data'>
         <div class="form-horizontal">

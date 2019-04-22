@@ -7,7 +7,6 @@
             <tr>
                 <th>Name</th>
                 <th></th>
-
             </tr>
         </thead>
         <tbody>
@@ -16,7 +15,7 @@
                 <tr>
                     <td>@record.DisplayName</td>
                     <td>
-                        @Html.ActionLink("Assign", "Assign", new { userId = record.Id })
+                        @Html.ActionLink("Assign", "Assign", new { id = record.Id })
                     </td>
                 </tr>
             }

@@ -21,16 +21,13 @@ namespace BugTracker.Models.ViewModels
         public string ProjectName { get; set; }
 
         public string CreatedBy { get; set; }
+        public string AssignedTo { get; set; }
 
         public string CommentBody { get; set; }
         public List<CommentTicketViewModel> Comments { get; set; }
 
         public HttpPostedFileBase Media { get; set; }
-        public List<string> MediaUrl { get; set; }
-
-        public ViewTicketViewModel()
-        {
-            MediaUrl = new List<string>();
-        }
+        public string FileUrl { get; set; }
+        public List<AttachmentTicketViewModel> Attachments { get; set; }
     }
 }
