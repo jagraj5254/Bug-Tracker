@@ -1,6 +1,7 @@
 ﻿using BugTracker.Models.Domain;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -23,6 +24,7 @@ namespace BugTracker.Models.ViewModels
         public string CreatedBy { get; set; }
         public string AssignedTo { get; set; }
 
+        [Required]
         public string CommentBody { get; set; }
         public List<CommentTicketViewModel> Comments { get; set; }
 

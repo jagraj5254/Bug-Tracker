@@ -21,6 +21,7 @@ namespace BugTracker.Controllers
             DbContext = new ApplicationDbContext();
         }
 
+        [Authorize]
         public ActionResult Index()
         {
             string userID = User.Identity.GetUserId();
@@ -69,6 +70,7 @@ namespace BugTracker.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Submitter, Developer")]
         public ActionResult IndexMyTickets()
         {
             string userID = User.Identity.GetUserId();
@@ -117,6 +119,7 @@ namespace BugTracker.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Submitter")]
         public ActionResult Create()
         {
             var model = new CreateTicketViewModel();
@@ -207,6 +210,7 @@ namespace BugTracker.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult Edit(int? id, CreateTicketViewModel model)
         {
             if (!ModelState.IsValid)
@@ -246,6 +250,7 @@ namespace BugTracker.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult Details(int? id)
         {
             if (!id.HasValue)
@@ -287,24 +292,12 @@ namespace BugTracker.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult Details(int? id, ViewTicketViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View();
-            }
-
-            string fileExtension;
-
-            if (model.Media != null)
-            {
-                fileExtension = Path.GetExtension(model.Media.FileName);
-
-                if (!Constants.AllowedFileExtensions.Contains(fileExtension))
-                {
-                    ModelState.AddModelError("", "File extension is not allowed.");
-                    return View();
-                }
             }
 
             Attachments attachment;
@@ -334,6 +327,7 @@ namespace BugTracker.Controllers
 
         }
 
+        [Authorize(Roles = "Admin, Project Manager")]
         public ActionResult AssignTicket()
         {
 
@@ -362,24 +356,26 @@ namespace BugTracker.Controllers
             return RedirectToAction(nameof(TicketController.Index));
         }
 
+        [Authorize]
         [HttpGet]
         public ActionResult Comment()
         {
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         public ActionResult Comment(int? id, ViewTicketViewModel model)
         {
             return SaveComment(null, model);
         }
 
-
+        [Authorize]
         public ActionResult SaveComment(int? id, ViewTicketViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return View();
+                return RedirectToAction("Details", new { id = model.Id });
             }
 
             Comments comment;
