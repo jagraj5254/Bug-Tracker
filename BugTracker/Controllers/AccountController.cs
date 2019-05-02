@@ -90,6 +90,51 @@ namespace BugTracker.Controllers
                     return View(model);
             }
         }
+        [AllowAnonymous]
+        public ActionResult DemoLoginPage()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        public async Task<ActionResult> DemoLogin(string roleName)
+        {
+            SignInStatus result;
+            if (roleName == "Admin")
+            {
+                result = await SignInManager.PasswordSignInAsync("admin@demo.com", "Password-1", false, shouldLockout: false);
+                if (result == SignInStatus.Success)
+                {
+                    return RedirectToAction("Index", "Project");
+                }
+            }
+            else if (roleName == "Project Manager")
+            {
+                result = await SignInManager.PasswordSignInAsync("projectManager@demo.com", "Password-1", false, shouldLockout: false);
+                if (result == SignInStatus.Success)
+                {
+                    return RedirectToAction("Index", "Project");
+                }
+            }
+            else if (roleName == "Developer")
+            {
+                result = await SignInManager.PasswordSignInAsync("developer@demo.com", "Password-1", false, shouldLockout: false);
+                if (result == SignInStatus.Success)
+                {
+                    return RedirectToAction("Index", "Project");
+                }
+            }
+            else if (roleName == "Submitter")
+            {
+                result = await SignInManager.PasswordSignInAsync("submitter@demo.com", "Password-1", false, shouldLockout: false);
+
+                if (result == SignInStatus.Success)
+                {
+                    return RedirectToAction("Index", "Project");
+                }
+            }
+            return RedirectToAction("Login", "Project");
+        }
 
         //
         // GET: /Account/VerifyCode

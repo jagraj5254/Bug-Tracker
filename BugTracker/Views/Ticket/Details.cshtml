@@ -7,7 +7,7 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-4">
+        <div class="col-3">
             <h3>Details</h3>
             <table class="table" id="ticketList">
                 <tr>
@@ -42,13 +42,27 @@
                     <th>Attachment</th>
                     @foreach (var attachment in Model.Attachments)
                     {
-                        <td>@attachment.FileUrl</td>
+                        <td>
+                            <a href="@attachment.FileUrl" download="">@attachment.FileUrl</a>
+                        </td>
                     }
                 </tr>
 
             </table>
+            <div class="container">
+                <h2>History</h2>
+                @foreach (var item in Model.Histories)
+                {
+                    <div class="panel panel-info">
+                        <div class="panel-body">
+                            @item.Property changed to @item.NewValue from @item.OldValue
+                        </div>
+                    </div>
+                }
+            </div>
+
         </div>
-        <div class="col-8">
+        <div class="col-9">
             <div>
                 <h3>Comments</h3>
                 @foreach (var comments in Model.Comments)
@@ -61,6 +75,19 @@
                             <td> @comments.DateCreated</td>
                             <th>By:</th>
                             <td>@comments.Created</td>
+                            @if (User.IsInRole("Submitter") || User.IsInRole("Developer"))
+                            {
+                                if (comments.Created == User.Identity.Name)
+                                {
+                                    <td>@Html.ActionLink("Edit", "EditComments", new { id = comments.Id })</td>
+                                    <td>@Html.ActionLink("Delete", "DeleteComments", new { id = comments.Id })</td>
+                                }
+                            }
+                            else
+                            {
+                                <td>@Html.ActionLink("Edit", "EditComments", new { id = comments.Id })</td>
+                                <td>@Html.ActionLink("Delete", "DeleteComments", new { id = comments.Id })</td>
+                            }
                         </tr>
                     </table>
                 }
@@ -68,42 +95,50 @@
         </div>
     </div>
 
-    <div class="row">
-        @using (Html.BeginForm("Comment", "Ticket", new { id = Model.Id }, FormMethod.Post))
-        {
-            <div class="form-horizontal">
-                <h4>Comment</h4>
-                <hr />
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <div class="row">
+                    @using (Html.BeginForm("Comment", "Ticket", new { id = Model.Id }, FormMethod.Post))
+                    {
+                        <div class="form-horizontal">
+                            <h4>Comment</h4>
+                            <hr />
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.CommentBody, "Comment:")
-                    @Html.TextBoxFor(model => model.CommentBody, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.CommentBody, "", new { @class = "danger" })
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CommentBody, "Comment:")
+                                @Html.TextBoxFor(model => model.CommentBody, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.CommentBody, "", new { @class = "danger" })
+                            </div>
+
+                            <button type="submit" class="btn btn-default">Create</button>
+                        </div>
+                    }
+
                 </div>
-
-                <button type="submit" class="btn btn-default">Create</button>
             </div>
-        }
+            <div class="col-6">
+                <form method="post" enctype='multipart/form-data'>
+                    <div class="form-horizontal">
+                        <h4>Attachment</h4>
+                        <hr />
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-    </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Media, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <input name="media" type="file" class="form-control" id="fileUpload" />
+                            @Html.ValidationMessageFor(model => model.Media, "", new { @class = "text-danger" })
+                        </div>
 
-    <form method="post" enctype='multipart/form-data'>
-        <div class="form-horizontal">
-            <h4>Attachment</h4>
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <button type="submit" class="btn btn-default">Create</button>
+                    </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Media, htmlAttributes: new { @class = "control-label col-md-2" })
-                <input name="media" type="file" class="form-control" id="fileUpload" />
-                @Html.ValidationMessageFor(model => model.Media, "", new { @class = "text-danger" })
+                </form>
             </div>
-
-            <button type="submit" class="btn btn-default">Create</button>
         </div>
-
-    </form>
+    </div>
 </div>
+
 
 

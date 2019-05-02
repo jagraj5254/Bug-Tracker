@@ -24,5 +24,8 @@ namespace BugTracker.Models.ViewModels
         public string TicketStatusName { get; set; }
         public string ProjectName { get; set; }
         public SelectList ProjectList { get; set; }
+        public SelectList TypeList { get; set; }
+        public SelectList PriorityList { get; set; }
+        public SelectList StatusList { get; set; }
     }
 }

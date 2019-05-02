@@ -79,7 +79,9 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.CreatedBy)
                                 </td>
-                                <td></td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.AssignedTo)
+                                </td>
 
                                 @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
                                 {
@@ -98,7 +100,7 @@
                                 @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
                                 {
                                     <td>
-                                        @Html.ActionLink("Assign", "AssignTicket")
+                                        @Html.ActionLink("Assign", "AssignTicket", new { id = item.Id })
                                     </td>
                                 }
                                 else

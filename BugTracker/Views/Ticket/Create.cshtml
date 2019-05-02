@@ -34,15 +34,7 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.TicketTypeName, htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
-                                    @Html.DropDownListFor(model => model.TicketTypeName, new List<SelectListItem> {
-                               new SelectListItem{
-                               Text = "Bug", Value="Bug"},
-                                new SelectListItem{
-                               Text = "Support", Value="Support"},
-                                 new SelectListItem{
-                               Text = "Database", Value="Database"},
-                                 new SelectListItem{
-                               Text = "Feature", Value="Feature"}})
+                                    @Html.DropDownListFor(model => model.TicketTypeName, Model.TypeList, htmlAttributes: new { @class = "form-control" })
                                     @Html.ValidationMessageFor(model => model.TicketTypeName, "", new { @class = "text-danger" })
                                 </div>
                             </div>
@@ -50,13 +42,7 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.TicketPriorityName, htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-10">
-                                    @Html.DropDownListFor(model => model.TicketPriorityName, new List<SelectListItem> {
-                                   new SelectListItem{
-                                   Text = "Low", Value="Low"},
-                                    new SelectListItem{
-                                   Text = "Medium ", Value="Medium "},
-                                     new SelectListItem{
-                                   Text = "High", Value="High"}})
+                                    @Html.DropDownListFor(model => model.TicketPriorityName, Model.PriorityList, htmlAttributes: new { @class = "form-control" })
                                     @Html.ValidationMessageFor(model => model.TicketPriorityName, "", new { @class = "text-danger" })
                                 </div>
                             </div>
@@ -67,13 +53,7 @@
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.TicketStatusName, htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-10">
-                                        @Html.DropDownListFor(model => model.TicketStatusName, new List<SelectListItem> {
-                                       new SelectListItem{
-                                       Text = "Open", Value="Open"},
-                                        new SelectListItem{
-                                       Text = "Resolved ", Value="Resolved "},
-                                         new SelectListItem{
-                                       Text = "Rejected", Value="Rejected"}})
+                                        @Html.DropDownListFor(model => model.TicketStatusName, Model.StatusList, htmlAttributes: new { @class = "form-control" })
                                         @Html.ValidationMessageFor(model => model.TicketStatusName, "", new { @class = "text-danger" })
                                     </div>
                                 </div>

@@ -29,7 +29,11 @@ namespace BugTracker.Models.ViewModels
         public List<CommentTicketViewModel> Comments { get; set; }
 
         public HttpPostedFileBase Media { get; set; }
+
         public string FileUrl { get; set; }
         public List<AttachmentTicketViewModel> Attachments { get; set; }
+
+        public List<ViewHistoryViewModel> Histories { get; set; }
+
     }
 }

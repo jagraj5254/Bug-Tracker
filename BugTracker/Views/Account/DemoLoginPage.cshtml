@@ -1,0 +1,29 @@
+﻿
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="panel panel-default">
+                <div class="panel-heading">Select a Role to Login</div>
+                <div class="panel-body">
+                    <a class="btn btn-default btn-lg btn-block" href=@Url.Action("DemoLogin", new { roleName = "Admin" })>
+                        Admin
+                    </a>
+                    <br />
+                    <a class="btn btn-default btn-lg btn-block" href=@Url.Action("DemoLogin", new { roleName = "Project Manager" })>
+                        Project Manager
+                    </a>
+                    <br />
+                    <a class="btn btn-default btn-lg btn-block" href=@Url.Action("DemoLogin", new { roleName = "Developer" })>
+                        Developer
+                    </a>
+                    <br />
+                    <a class="btn btn-default btn-lg btn-block" href=@Url.Action("DemoLogin", new { roleName = "Submitter" })>
+                        Submitter
+                    </a>
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

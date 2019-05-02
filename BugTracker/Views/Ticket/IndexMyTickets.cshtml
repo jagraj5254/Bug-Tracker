@@ -74,7 +74,9 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.CreatedBy)
                                 </td>
-                                <td></td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.AssignedTo)
+                                </td>
                                 <td>
                                     @Html.ActionLink("EditTicket", "Edit", new { id = item.Id })
                                 </td>

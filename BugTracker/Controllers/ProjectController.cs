@@ -28,7 +28,84 @@ namespace BugTracker.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            var model = new ViewProjectViewModel();
+
+            var members = DbContext.Users.Count();
+
+            if (User.IsInRole("Admin"))
+            {
+                var tickets = DbContext.Tickets.Count();
+                var projects = DbContext.Projects.Count();
+
+                var openTickets = DbContext.Tickets
+               .Where(p => p.TicketStatus.Name == "Open").Count();
+                var resolvedTickets = DbContext.Tickets
+                    .Where(p => p.TicketStatus.Name == "Resolved").Count();
+                var rejectedTickets = DbContext.Tickets
+                    .Where(p => p.TicketStatus.Name == "Rejected").Count();
+
+                model.Tickets = tickets;
+                model.openTickets = openTickets;
+                model.resolvedTickets = resolvedTickets;
+                model.rejectedTickets = rejectedTickets;
+                model.Projects = projects;
+                model.Members = members;
+            }
+            if (User.IsInRole("Submitter"))
+            {
+                var userId = User.Identity.GetUserId();
+
+                var userProjects = DbContext.Projects
+                    .Where(p => p.Users.Any(m => m.Id == userId)).Count();
+                var userTickets = DbContext.Tickets
+                    .Where(p => p.CreatedBy.Id == userId)
+                    .Select(p => new { p.TicketStatus }).ToList();
+
+                var tickets = userTickets.Count();
+
+                var openTickets = userTickets
+              .Where(p => p.TicketStatus.Name == "Open").Count();
+                var resolvedTickets = userTickets
+                    .Where(p => p.TicketStatus.Name == "Resolved").Count();
+                var rejectedTickets = userTickets
+                    .Where(p => p.TicketStatus.Name == "Rejected").Count();
+
+                model.Tickets = tickets;
+                model.openTickets = openTickets;
+                model.resolvedTickets = resolvedTickets;
+                model.rejectedTickets = rejectedTickets;
+                model.Projects = userProjects;
+                model.Members = members;
+            }
+
+            if (User.IsInRole("Developer"))
+            {
+                var userId = User.Identity.GetUserId();
+
+                var userProjects = DbContext.Projects
+                    .Where(p => p.Users.Any(m => m.Id == userId)).Count();
+                var userTickets = DbContext.Tickets
+                    .Where(p => p.AssignedTo.Id == userId)
+                    .Select(p => new { p.TicketStatus }).ToList();
+
+                var tickets = userTickets.Count();
+
+                var openTickets = userTickets
+              .Where(p => p.TicketStatus.Name == "Open").Count();
+                var resolvedTickets = userTickets
+                    .Where(p => p.TicketStatus.Name == "Resolved").Count();
+                var rejectedTickets = userTickets
+                    .Where(p => p.TicketStatus.Name == "Rejected").Count();
+
+                model.Tickets = tickets;
+                model.openTickets = openTickets;
+                model.resolvedTickets = resolvedTickets;
+                model.rejectedTickets = rejectedTickets;
+                model.Projects = userProjects;
+                model.Members = members;
+            }
+
+            return View(model);
         }
 
         public ActionResult ManageUser()
@@ -292,7 +369,7 @@ namespace BugTracker.Controllers
         public ActionResult EditMembers(int? id)
         {
             if (!id.HasValue)
-            {           
+            {
                 return RedirectToAction(nameof(ProjectController.ViewProject));
             }
 
@@ -306,7 +383,7 @@ namespace BugTracker.Controllers
             var removeUsers = project.Users;
             var users = DbContext.Users.ToList();
             var addUsers = new List<ApplicationUser>();
-            foreach(var user in users)
+            foreach (var user in users)
             {
                 if (!removeUsers.Contains(user))
                 {
