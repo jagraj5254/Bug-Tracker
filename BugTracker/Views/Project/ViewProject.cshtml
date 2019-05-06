@@ -13,7 +13,6 @@
         $(document).ready(function () {
             $('#projectList').DataTable();
         });
-<a href="~/Views/Project/ViewProject.cshtml">~/Views/Project/ViewProject.cshtml</a>
     </script>
 }
 
@@ -48,34 +47,34 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Members)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Tickets)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Created)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Updated)
-                            </td>
-
-                            @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
-                            {
+                            <tr>
                                 <td>
-                                    @Html.ActionLink("EditProjects", "Edit", new { id = item.Id }) |
-                                    @Html.ActionLink("EditMembers", "EditMembers", new { id = item.Id })
+                                    @Html.DisplayFor(modelItem => item.Name)
                                 </td>
-                            }
-                            <td>
-                                @Html.ActionLink("Archive Project", "Archive", new { id = item.Id }) |
-                            </td>
-                        </tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Members)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Tickets)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Created)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Updated)
+                                </td>
+
+                                @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
+                                {
+                                    <td>
+                                        @Html.ActionLink("EditProjects", "Edit", new { id = item.Id }) |
+                                        @Html.ActionLink("EditMembers", "EditMembers", new { id = item.Id })
+                                    </td>
+                                }
+                                <td>
+                                    @Html.ActionLink("Archive Project", "Archive", new { id = item.Id })
+                                </td>
+                            </tr>
                         }
                     </tbody>
                 </table>

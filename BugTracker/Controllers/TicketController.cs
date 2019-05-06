@@ -243,7 +243,7 @@ namespace BugTracker.Controllers
 
         [HttpPost]
         [Authorize]
-        public ActionResult Edit(int? id, CreateTicketViewModel model, string userId)
+        public ActionResult Edit(int? id, CreateTicketViewModel model)
         {
             if (!ModelState.IsValid)
             {

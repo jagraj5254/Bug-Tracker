@@ -187,7 +187,6 @@
     <Compile Include="Models\Domain\History.cs" />
     <Compile Include="Models\Domain\Attachments.cs" />
     <Compile Include="Models\Domain\Comments.cs" />
-    <Compile Include="Models\Domain\Notifications.cs" />
     <Compile Include="Models\Domain\Project.cs" />
     <Compile Include="Models\Domain\Tickets\Ticket.cs" />
     <Compile Include="Models\Domain\Tickets\TicketPriority.cs" />
