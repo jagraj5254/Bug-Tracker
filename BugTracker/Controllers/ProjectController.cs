@@ -26,6 +26,7 @@ namespace BugTracker.Controllers
             roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(DbContext));
         }
 
+        [Authorize]
         public ActionResult Index()
         {
             var model = new ViewProjectViewModel();
@@ -108,6 +109,7 @@ namespace BugTracker.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult ManageUser()
         {
             DbContext.Users
@@ -130,6 +132,7 @@ namespace BugTracker.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Admin, Project Manager")]
         public ActionResult ViewProject()
         {
             var model = DbContext.Projects
@@ -146,6 +149,7 @@ namespace BugTracker.Controllers
             return View(model);
         }
 
+        [Authorize]
         public ActionResult MyProjects()
         {
             var userId = User.Identity.GetUserId();
@@ -167,12 +171,14 @@ namespace BugTracker.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin, Project Manager")]
         public ActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Project Manager")]
         public ActionResult Create(int? id, CreateProjectViewModel model)
         {
             if (!ModelState.IsValid)
@@ -206,7 +212,7 @@ namespace BugTracker.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Project Manager")]
         public ActionResult Edit(int? id)
         {
             if (!id.HasValue)
@@ -229,7 +235,7 @@ namespace BugTracker.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Project Manager")]
         public ActionResult Edit(int? id, CreateProjectViewModel model)
         {
             if (!ModelState.IsValid)
@@ -283,6 +289,7 @@ namespace BugTracker.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public ActionResult EditRole(string userId)
         {
             if (!string.IsNullOrEmpty(userId))
@@ -319,6 +326,7 @@ namespace BugTracker.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult EditRole(EditRoleViewModel model, string userId)
         {
             if (string.IsNullOrEmpty(userId) || !ModelState.IsValid)
@@ -367,6 +375,7 @@ namespace BugTracker.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult EditMembers(int? id)
         {
             if (!id.HasValue)
@@ -402,6 +411,7 @@ namespace BugTracker.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult AddUser(string id, int? projectId)
         {
             if (string.IsNullOrWhiteSpace(id) || !projectId.HasValue)
@@ -416,6 +426,7 @@ namespace BugTracker.Controllers
             return RedirectToAction(nameof(ProjectController.EditMembers));
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult DeleteUser(string id, int? projectId)
         {
             if (string.IsNullOrWhiteSpace(id) || !projectId.HasValue)
@@ -430,6 +441,7 @@ namespace BugTracker.Controllers
             return RedirectToAction(nameof(ProjectController.EditMembers));
         }
 
+        [Authorize(Roles = "Admin, Project Manager")]
         public ActionResult Archive(int? id)
         {
             var project = DbContext.Projects.FirstOrDefault(p => p.Id == id);
