@@ -41,37 +41,41 @@
                             <th>Created</th>
                             <th>Updated</th>
                             <th></th>
+                            <th></th>
                         </tr>
                     </thead>
 
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Name)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Members)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Tickets)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Created)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Updated)
-                                </td>
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Members)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Tickets)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Created)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Updated)
+                            </td>
 
-                                @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
-                                {
-                                    <td>
-                                        @Html.ActionLink("EditProjects", "Edit", new { id = item.Id }) |
-                                        @Html.ActionLink("EditMembers", "EditMembers", new { id = item.Id })
-                                    </td>
-                                }
-                            </tr>
+                            @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
+                            {
+                                <td>
+                                    @Html.ActionLink("EditProjects", "Edit", new { id = item.Id }) |
+                                    @Html.ActionLink("EditMembers", "EditMembers", new { id = item.Id })
+                                </td>
+                            }
+                            <td>
+                                @Html.ActionLink("Archive Project", "Archive", new { id = item.Id }) |
+                            </td>
+                        </tr>
                         }
                     </tbody>
                 </table>

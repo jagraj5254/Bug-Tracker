@@ -24,7 +24,8 @@ namespace BugTracker.Models.ViewModels
         public string CreatedBy { get; set; }
         public string AssignedTo { get; set; }
 
-        [Required]
+        public virtual List<ApplicationUser> UserNotifications { get; set; }
+
         public string CommentBody { get; set; }
         public List<CommentTicketViewModel> Comments { get; set; }
 

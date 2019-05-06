@@ -193,6 +193,7 @@
     <Compile Include="Models\Domain\Tickets\TicketPriority.cs" />
     <Compile Include="Models\Domain\Tickets\TicketStatus.cs" />
     <Compile Include="Models\Domain\Tickets\TicketType.cs" />
+    <Compile Include="Models\EmailNotification.cs" />
     <Compile Include="Models\EmailService.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />

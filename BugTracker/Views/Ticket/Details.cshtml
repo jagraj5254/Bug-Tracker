@@ -4,6 +4,8 @@
     ViewBag.Title = "Details";
 }
 
+@*@Styles.Render(@"~/Content/css")*@
+
 
 <div class="container">
     <div class="row">
@@ -38,28 +40,7 @@
                     <th>Type</th>
                     <td>@Model.TicketTypeName</td>
                 </tr>
-                <tr>
-                    <th>Attachment</th>
-                    @foreach (var attachment in Model.Attachments)
-                    {
-                        <td>
-                            <a href="@attachment.FileUrl" download="">@attachment.FileUrl</a>
-                        </td>
-                    }
-                </tr>
-
             </table>
-            <div class="container">
-                <h2>History</h2>
-                @foreach (var item in Model.Histories)
-                {
-                    <div class="panel panel-info">
-                        <div class="panel-body">
-                            @item.Property changed to @item.NewValue from @item.OldValue
-                        </div>
-                    </div>
-                }
-            </div>
 
         </div>
         <div class="col-9">
@@ -91,6 +72,52 @@
                         </tr>
                     </table>
                 }
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <div>
+                    <h3>Attachments</h3>
+                    @foreach (var attachment in Model.Attachments)
+                    {
+                        <table class="table" id="ticketList">
+                            <tr>
+                                <th>Attachments:</th>
+                                <td>
+                                    <a href="@attachment.FileUrl" download="">@attachment.FileUrl</a>
+                                </td>
+
+                                @if (User.IsInRole("Submitter") || User.IsInRole("Developer"))
+                                {
+                                    if (attachment.Created == User.Identity.Name)
+                                    {
+                                        <td>@Html.ActionLink("Delete", "DeleteAttachments", new { id = attachment.Id })</td>
+                                    }
+                                }
+                                else
+                                {
+                                    <td>@Html.ActionLink("Delete", "DeleteAttachments", new { id = attachment.Id })</td>
+                                }
+                            </tr>
+                        </table>
+                    }
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="container">
+                    <h2>History</h2>
+                    @foreach (var item in Model.Histories)
+                    {
+                        <div class="panel panel-info">
+                            <div class="panel-body">
+                                @item.Property changed to @item.NewValue from @item.OldValue by @item.By
+                            </div>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
     </div>

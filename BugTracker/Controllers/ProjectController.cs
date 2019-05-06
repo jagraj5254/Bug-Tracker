@@ -32,17 +32,17 @@ namespace BugTracker.Controllers
 
             var members = DbContext.Users.Count();
 
-            if (User.IsInRole("Admin"))
+            if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
             {
-                var tickets = DbContext.Tickets.Count();
-                var projects = DbContext.Projects.Count();
+                var tickets = DbContext.Tickets.Where(p => p.Project.Archive == false).Count();
+                var projects = DbContext.Projects.Where(p => p.Archive == false).Count();
 
                 var openTickets = DbContext.Tickets
-               .Where(p => p.TicketStatus.Name == "Open").Count();
+               .Where(p => p.TicketStatus.Name == "Open" && p.Project.Archive == false).Count();
                 var resolvedTickets = DbContext.Tickets
-                    .Where(p => p.TicketStatus.Name == "Resolved").Count();
+                    .Where(p => p.TicketStatus.Name == "Resolved" && p.Project.Archive == false).Count();
                 var rejectedTickets = DbContext.Tickets
-                    .Where(p => p.TicketStatus.Name == "Rejected").Count();
+                    .Where(p => p.TicketStatus.Name == "Rejected" && p.Project.Archive == false).Count();
 
                 model.Tickets = tickets;
                 model.openTickets = openTickets;
@@ -56,9 +56,9 @@ namespace BugTracker.Controllers
                 var userId = User.Identity.GetUserId();
 
                 var userProjects = DbContext.Projects
-                    .Where(p => p.Users.Any(m => m.Id == userId)).Count();
+                    .Where(p => p.Users.Any(m => m.Id == userId) && p.Archive == false).Count();
                 var userTickets = DbContext.Tickets
-                    .Where(p => p.CreatedBy.Id == userId)
+                    .Where(p => p.CreatedBy.Id == userId && p.Project.Archive == false)
                     .Select(p => new { p.TicketStatus }).ToList();
 
                 var tickets = userTickets.Count();
@@ -83,9 +83,9 @@ namespace BugTracker.Controllers
                 var userId = User.Identity.GetUserId();
 
                 var userProjects = DbContext.Projects
-                    .Where(p => p.Users.Any(m => m.Id == userId)).Count();
+                    .Where(p => p.Users.Any(m => m.Id == userId) && p.Archive == false).Count();
                 var userTickets = DbContext.Tickets
-                    .Where(p => p.AssignedTo.Id == userId)
+                    .Where(p => p.AssignedTo.Id == userId && p.Project.Archive == false)
                     .Select(p => new { p.TicketStatus }).ToList();
 
                 var tickets = userTickets.Count();
@@ -133,6 +133,7 @@ namespace BugTracker.Controllers
         public ActionResult ViewProject()
         {
             var model = DbContext.Projects
+                .Where(p => p.Archive == false)
                             .Select(p => new ViewProjectViewModel
                             {
                                 Name = p.Name,
@@ -140,7 +141,7 @@ namespace BugTracker.Controllers
                                 Created = p.Created,
                                 Updated = p.Updated,
                                 Members = p.Users.Count,
-                                Tickets = p.Ticket.Count
+                                Tickets = p.Ticket.Count,
                             }).ToList();
             return View(model);
         }
@@ -151,7 +152,7 @@ namespace BugTracker.Controllers
 
             var model = DbContext
                 .Projects
-                .Where(p => p.Users.Any(t => t.Id == userId))
+                .Where(p => p.Users.Any(t => t.Id == userId) && p.Archive == false)
                 .Select(p => new ViewProjectViewModel
                 {
                     Name = p.Name,
@@ -188,7 +189,7 @@ namespace BugTracker.Controllers
             }
             else
             {
-                project = DbContext.Projects.FirstOrDefault(p => p.Id == id);
+                project = DbContext.Projects.FirstOrDefault(p => p.Id == id && p.Archive == false);
 
                 if (project == null)
                 {
@@ -214,7 +215,7 @@ namespace BugTracker.Controllers
             }
 
             var project = DbContext.Projects.FirstOrDefault(
-                p => p.Id == id);
+                p => p.Id == id && p.Archive == false);
 
             if (project == null)
             {
@@ -245,7 +246,7 @@ namespace BugTracker.Controllers
             }
             else
             {
-                project = DbContext.Projects.FirstOrDefault(p => p.Id == id);
+                project = DbContext.Projects.FirstOrDefault(p => p.Id == id && p.Archive == false);
 
                 if (project == null)
                 {
@@ -270,7 +271,7 @@ namespace BugTracker.Controllers
                 return RedirectToAction(nameof(ProjectController.ViewProject));
             }
 
-            var project = DbContext.Projects.FirstOrDefault(p => p.Id == id);
+            var project = DbContext.Projects.FirstOrDefault(p => p.Id == id && p.Archive == false);
 
             if (project != null)
             {
@@ -373,7 +374,7 @@ namespace BugTracker.Controllers
                 return RedirectToAction(nameof(ProjectController.ViewProject));
             }
 
-            var project = DbContext.Projects.FirstOrDefault(p => p.Id == id);
+            var project = DbContext.Projects.FirstOrDefault(p => p.Id == id && p.Archive == false);
 
             if (project == null)
             {
@@ -408,7 +409,7 @@ namespace BugTracker.Controllers
                 return RedirectToAction(nameof(ProjectController.EditMembers));
             }
             var users = DbContext.Users.FirstOrDefault(u => u.Id == id);
-            var project = DbContext.Projects.FirstOrDefault(p => p.Id == projectId);
+            var project = DbContext.Projects.FirstOrDefault(p => p.Id == projectId && p.Archive == false);
             project.Users.Add(users);
             DbContext.SaveChanges();
 
@@ -422,11 +423,20 @@ namespace BugTracker.Controllers
                 return RedirectToAction(nameof(ProjectController.EditMembers));
             }
             var users = DbContext.Users.FirstOrDefault(u => u.Id == id);
-            var project = DbContext.Projects.FirstOrDefault(p => p.Id == projectId);
+            var project = DbContext.Projects.FirstOrDefault(p => p.Id == projectId && p.Archive == false);
             project.Users.Remove(users);
             DbContext.SaveChanges();
 
             return RedirectToAction(nameof(ProjectController.EditMembers));
+        }
+
+        public ActionResult Archive(int? id)
+        {
+            var project = DbContext.Projects.FirstOrDefault(p => p.Id == id);
+            project.Archive = true;
+            DbContext.SaveChanges();
+
+            return RedirectToAction(nameof(ProjectController.ViewProject));
         }
     }
 }

@@ -108,7 +108,7 @@ namespace BugTracker.Controllers
                     return RedirectToAction("Index", "Project");
                 }
             }
-            else if (roleName == "Project Manager")
+            else if (roleName == "ProjectManager")
             {
                 result = await SignInManager.PasswordSignInAsync("projectManager@demo.com", "Password-1", false, shouldLockout: false);
                 if (result == SignInStatus.Success)
